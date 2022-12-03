@@ -1,0 +1,13 @@
+<!-- include sayesinde partials klasöründeki header ve footer sayfalarını bu sayfaya dahil etmiş oluyorum -->
+<%- include("partials/header") -%>
+
+<h1>HOME</h1>
+<p><%= homeStartingContent %></p>
+
+<!-- posts array'in içerisindeki objecti seçmek için posts[0] yapmalıyız. Title object'ini seçmek için de .title yapmalıyız. forEach döngüsüyse işimizi kolaylaştırıp
+[]'dan kendi seçiyor  -->
+<% posts.forEach((post) => { %>
+    <h1><%= post.title %></h1>
+    <p><%= post.body %></p>
+<% }) %>
+<%- include("partials/footer") -%>
