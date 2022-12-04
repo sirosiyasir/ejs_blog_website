@@ -1,11 +1,13 @@
 /* bu projenin çalışması için node_modules'i yükleyin; express , body-parser ve ejs npm'lerini indirin
 daha sonra nodemon app.js komutuyla (hyper vb) nodemon'u çalıştırın. Sonra tarayıcınızda local host 3000'de açın.
-nodemon app.js komutu çalışmıyorsa npx nodemon app 'i deneyin*/
+nodemon app.js komutu çalışmıyorsa npx nodemon app 'i deneyin. localhost:3000/compose 'a giderek yeni günlük ekleyebilirsiniz */
 
 //indirdiğim npm paketlerini proje dahil ediyorum
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+// _.kebabCase'i kullanmak için lodash npm'ini kurdum
+const _ = require('lodash');
 
 const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
 const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
@@ -56,9 +58,16 @@ posts.push(post)
 res.redirect("/")
 })
 
-// "/"tan sonra gelecek herhangi bir parametreyi req.params sayesinde yakalarız , yani ÖR: localhost:3000/yeniblog 'taki yeniblog bir parametredir.
-app.get("/:topic", function(req,res) {
-  console.log(req.params.topic);
+// "/posts"tan sonra gelecek herhangi bir parametreyi req.params sayesinde yakalarız , yani ÖR: localhost:3000/posts/yeniblog 'taki yeniblog bir parametredir.
+app.get("/posts/:topic", function(req,res) {
+  const requestUrl = _.kebabCase(req.params.topic)
+  posts.forEach((post) => {
+    const title = _.kebabCase(post.title)
+    if (requestUrl === title) {
+      // post sayfasına yönlendirirken her seferinde yalnızca bir title ve bir body'i göstermesi için posts:posts değil de posts:post dedim
+      res.render("post", {posts: post})
+    }
+  });
 })
 
 
